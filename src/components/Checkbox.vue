@@ -1,11 +1,11 @@
 <template>
-  <label htmlFor="name.toLowerCase()" class="container">
+  <label :for="snakeName" class="container">
     <input
       v-model="state"
       tabIndex="-1"
       type="checkbox"
-      id="name.toLowerCase()"
-      name="name.toLowerCase()"
+      :id="snakeName"
+      :name="snakeName"
       @click="handleClick"
       @keydown="handleSpace"
       :disabled="!isEnabled"
@@ -53,19 +53,24 @@ export default {
   },
   data() {
     return {
-      state: this.isChecked
+      state: this.isChecked,
+      snakeName: this.name
+        .toLowerCase()
+        .split(" ")
+        .join("_")
     };
   },
   methods: {
     handleClick() {
-      this.callback();
+      if (this.callback) {
+        this.callback();
+      }
     },
     handleSpace(event) {
-      console.log("event", event);
       if (this.isEnabled && event.keyCode === 32) {
         // 32 - space
         this.state = !this.state;
-        this.callback();
+        this.handleClick();
       }
     }
   }
@@ -202,7 +207,7 @@ input:checked ~ .checkmarkDisabled {
   transform: rotate(45deg);
 }
 
-/* Styles for animation */
+/* Styles for shadow animations */
 .wave-enter-active {
   animation: bounce-in 0.3s;
   animation-timing-function: ease-in-out;
